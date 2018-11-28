@@ -55,7 +55,7 @@ getrange name 1 2
 getset name illikang
 >"Leon"
 ```
-5.SETBIT key offset:对 key 所储存的字符串值，设置或清除指定偏移量上的位(bit)。
+5.SETBIT key offset:对 key 所储存的字符串值，设置或清除指定偏移量上的位(bit)。<br/>
 6.GETBIT key offset：对 key 所储存的字符串值，获取指定偏移量上的位(bit)。
 ```
 //bit 默认被初始化为0
@@ -68,14 +68,14 @@ setbit bitmap 20 1
 getbit bitmap 20
 >(integer) 1
 ```
-补充：bit位存储是个很强大的功能。bit位只能存储0或1，可以用户很多场景，比如性别，商品是否有库存，座位是否已经预定等等。
+补充：bit位存储是个很强大的功能。bit位只能存储0或1，可以用户很多场景，比如性别，商品是否有库存，座位是否已经预定等等。<br/>
 7. MGET key1 [key2..]：获取所有(一个或多个)给定 key 的值。
 ```
 mget name bitmap
 >"illikang"
 >"te{t"
 ```
-补充：这里bitmap取出的值变为“te{t”是因为之前的位操作，改变了字符串的内容
+补充：这里bitmap取出的值变为“te{t”是因为之前的位操作，改变了字符串的内容。<br/>
 8. SETEX key seconds value：将值 value 关联到 key ，并将 key 的过期时间设为 seconds (以秒为单位)。
 ```
 setex expire 10 aaa
