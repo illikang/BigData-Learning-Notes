@@ -55,8 +55,8 @@ getrange name 1 2
 getset name illikang
 >"Leon"
 ```
-5.SETBIT key offset:对 key 所储存的字符串值，设置或清除指定偏移量上的位(bit)。<br/>
-6.GETBIT key offset：对 key 所储存的字符串值，获取指定偏移量上的位(bit)。
+5. SETBIT key offset:对 key 所储存的字符串值，设置或清除指定偏移量上的位(bit)。<br/>
+6. GETBIT key offset：对 key 所储存的字符串值，获取指定偏移量上的位(bit)。
 ```
 //bit 默认被初始化为0
 set bitmap "test"
@@ -107,15 +107,15 @@ setrange name 3 aaaa
 get name
 >"illaaag"
 ```
-11 STRLEN key:返回 key 所储存的字符串值的长度。
+11. STRLEN key:返回 key 所储存的字符串值的长度。
 ```
 strlen name
 >(integer) 8
 ```
-12.MSET key value [key value ...]:同时设置一个或多个 key-value 对。
-13.MSETNX key value [key value ...] :同时设置一个或多个 key-value 对，当且仅当所有给定 key 都不存在。
-14.PSETEX key milliseconds value:和 SETEX 命令相似，但它以毫秒为单位设置 key 的生存时间，而不是像 SETEX 命令那样，以秒为单位。
-15.INCR key:将 key 中储存的数字值增一。
+12. MSET key value [key value ...]:同时设置一个或多个 key-value 对。
+13. MSETNX key value [key value ...] :同时设置一个或多个 key-value 对，当且仅当所有给定 key 都不存在。
+14. PSETEX key milliseconds value:和 SETEX 命令相似，但它以毫秒为单位设置 key 的生存时间，而不是像 SETEX 命令那样，以秒为单位。
+15. INCR key:将 key 中储存的数字值增一。
 ```
 set num 1
 incr num
@@ -133,9 +133,9 @@ incrby num 6
 incrbyfloat num 1.2
 >"9.19999999999"
 ```
-18.DECR key:将 key 中储存的数字值减一。
-19.DECRBY key decrement:key 所储存的值减去给定的减量值（decrement） 。
-20.APPEND key value:如果 key 已经存在并且是一个字符串， APPEND 命令将指定的 value 追加到该 key 原来值（value）的末尾。
+18. DECR key:将 key 中储存的数字值减一。
+19. DECRBY key decrement:key 所储存的值减去给定的减量值（decrement） 。
+20. APPEND key value:如果 key 已经存在并且是一个字符串， APPEND 命令将指定的 value 追加到该 key 原来值（value）的末尾。
 ```
 set a wang
 append a kang
