@@ -26,9 +26,88 @@ Redis是基于key-value的存储系统。
 它的值（value）支持五种数据类型：String(字符串),hash（哈希）,list（列表）,set（集合）和zset(sorted set：有序集合)。
 ## key
 ### key键
-
+Redis是键值存储结构，我们要存储的数据在值中，而值得索引则存储在键中。猜测：没有在资料中看到key的数据类型，猜测应该是字符串类型。
 ### key命令
-
+Redis键命令用于管理redis的键
+1. DEL key：在 key 存在时删除 key。
+```
+del bb 
+//返回0表示操作失败，因为key bb不存在
+>(integer) 0
+set bb test
+del bb
+>(integer) 1
+```
+2. DUMP key ：序列化给定 key ，并返回被序列化的值。
+```
+set bb tst
+dump bb
+>"\x00\x03tst\a\x00f\xfe\xe8\x96\xa4\rU}"
+```
+3. EXISTS key :检查给定 key 是否存在。
+```
+exists bc
+>(integer) 0
+```
+4. EXPIRE key seconds:为给定 key 设置过期时间，以秒计。
+```
+expire a 5
+>(integer) 1
+get a
+>(nil)
+```
+5. EXPIREAT key timestamp :和 EXPIRE 类似，都用于为 key 设置过期时间。 不同在于 EXPIREAT 命令接受的时间参数是 UNIX 时间戳(unix timestamp)。
+6. PEXPIRE key milliseconds :设置 key 的过期时间以毫秒计。
+7. PEXPIREAT key milliseconds-timestamp :置 key 过期时间的时间戳(unix timestamp) 以毫秒计
+8. KEYS pattern :查找所有符合给定模式( pattern)的 key 。类似模糊匹配。
+```
+set name1 leon
+set name2 tom
+set name3 jacky
+set name4 lili
+//查找以name为开头的key
+keys name*
+> "name1"
+> "name2"
+> "name3"
+> "name4"
+//查找redis中所有的key可用*
+keys *
+```
+9. MOVE key db :将当前数据库的 key 移动到给定的数据库 db 当中。
+```
+//redis默认使用数据库0，用select index命令选择数据库
+select 0
+set name aaaa   //在库0中存入键值对name=aaaa
+select 1
+exists name    //库1中不存在name
+>(integer) 0
+select 0       //返回库0
+move name 1    //将键name添加到库1
+>(integer) 1   
+select 1       //返回库1 
+exists name    //检查name是否存在
+>(integer) 1    //返回1，表示存在
+```
+10. PERSIST key :移除 key 的过期时间，key 将持久保持。
+11. PTTL key ：以毫秒为单位返回 key 的剩余的过期时间。
+12. TTL key ：以秒为单位，返回给定 key 的剩余生存时间(TTL, time to live)。
+13. RANDOMKEY ：从当前数据库中随机返回一个 key 。
+14. RENAME key newkey :修改 key 的名称。
+```
+set person a
+rename person p
+get person
+>(nil)
+get p
+>"a"
+```
+15. RENAMENX key newkey :仅当 newkey 不存在时，将 key 改名为 newkey 。
+16. TYPE key :返回 key 所储存的值的类型。
+```
+type p
+>string
+```
 ## String
 ### String字符串
 1. String是redis最基本的类型，其他集合类型都是基于String构建的。
