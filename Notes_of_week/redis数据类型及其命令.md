@@ -31,7 +31,7 @@ Redis是键值存储结构，我们要存储的数据在值中，而值得索引
 Redis键命令用于管理redis的键
 1. DEL key：在 key 存在时删除 key。
 ```
-del bb 
+del bb
 //返回0表示操作失败，因为key bb不存在
 >(integer) 0
 set bb test
@@ -85,7 +85,7 @@ exists name    //库1中不存在name
 select 0       //返回库0
 move name 1    //将键name添加到库1
 >(integer) 1   
-select 1       //返回库1 
+select 1       //返回库1
 exists name    //检查name是否存在
 >(integer) 1    //返回1，表示存在
 ```
@@ -224,17 +224,106 @@ get a
 ```
 ## hash
 ### hash哈希
+
 ### hash值命令
 
 ## list
 ### list列表
+Redis的list是每个子元素都是String类型的双向链表，可以通过push和pop操作从列表的头部或者尾部添加或者删除元素，这样List即可以作为栈，也可以作为队列。
 ### list值命令
-
+1. LPUSH key value1 [value2] :将一个或多个值插入到列表头部
+```
+lpush group leon wang zhang tom
+>(integer) 4
+```
+2. LPOP key :移出并获取列表的第一个元素
+```
+lpop group
+>"tom"
+```
+3. RPUSH key value1 [value2] :在列表尾中添加一个或多个值
+```
+//group:[leon，wang,zhang]
+rpush group first
+lpop group
+>"zhang"
+```
+4. RPOP key ：移除列表的最后一个元素，返回值为移除的元素。
+```
+//group:[first,leon, wang]
+rpop group
+>"first"
+```
+5. BLPOP key1 [key2 ] timeout :移出并获取列表的第一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。
+```
+lpush newlist aa
+blpop newlist 5
+//列表newlist中有元素，马上得到输出结果
+>1)"newlist"
+>2)"aa"
+blpop newlist 5
+//列表newlist已经没有元素，等待大约5秒以后输出
+（nil）
+（5.04s）
+```
+6. BRPOP key1 [key2 ] timeout :移出并获取列表的最后一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。
+7. BRPOPLPUSH source destination timeout ：从列表中弹出一个值，将弹出的元素插入到另外一个列表中并返回它； 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。
+8. LINDEX key index ：通过索引获取列表中的元素
+```
+//group:[leon, wang]
+lindex group 1
+>"leon"
+```
+9. LINSERT key BEFORE|AFTER pivot value :在列表的元素前或者后插入元素
+```
+//group:[leon, wang]
+linsert group after leon three
+//group:[leon, three,wang]
+```
+10. LLEN key :获取列表长度
+11. LRANGE key start stop ：获取列表指定范围内的元素,0表示列表的第一个元素，1表示列表的第二个元素，以此类推。也可是使用负数下表，以-1表示列表的最后一个元素，-2表示列表的倒数第二个元素，以此类推
+```
+//group:[leon,three,wang]
+lrange group 0 -1 //获取列表的所有元素
+>"wang"
+>"three"
+>"leon"
+```
+12. LREM key count value :移除列表元素
+  * count > 0 : 从表头开始向表尾搜索，移除与 VALUE 相等的元素，数量为 COUNT 。
+  * count < 0 : 从表尾开始向表头搜索，移除与 VALUE 相等的元素，数量为 COUNT 的绝对值。
+  * count = 0 : 移除表中所有与 VALUE 相等的值。
+```
+lpush team aa aa bb bb cc dd aa  // team=[aa,aa,bb,bb,cc,dd,aa]
+lrem team -2 aa
+>(interger) 2
+>1)"aa"
+>2)"dd"
+>3)"cc"
+>4)"bb"
+>5)"bb"
+```
+13. LSET key index value :通过索引设置列表元素的值
+```
+// team =[bb,bb,cc,dd,aa]
+lset team 0 new      //team =[bb,bb,cc,dd,new]
+```
+14. LTRIM key start stop :对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。
+```
+// team =[bb,bb,cc,dd,new]
+ltrim team 0 2    //   team =[cc,dd,new]
+```
+15. RPOPLPUSH source destination :移除列表的最后一个元素，并将该元素添加到另一个列表并返回
+16. RPUSHX key value :为已存在的列表添加值
+17. LPUSHX key value :将一个值插入到已存在的列表头部
 ## set
 ### set集合
 ### set值命令
 
 ## zset
 ### zset有序集合
+1. Redis有序集合和集合一样也是string类型元素的集合，且不允许重复的成员。
+2. 不同的是，有序集合中的每个元素都会关联一个double类型的分数。Redis正是通过分数来为集合中的成员进行从小到大的排序。
+3. 有序集合的成员时唯一的，但与成员关联的double分数却可以重复。
+4. 集合是通过哈希表实现的，所以添加、删除、查找的复杂度都是O(1)。
 ### zset值命令
-
