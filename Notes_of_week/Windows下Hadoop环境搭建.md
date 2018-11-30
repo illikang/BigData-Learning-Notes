@@ -22,7 +22,7 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
     * 新建HADOOP_HOME=D:\hadoop-2.5.2
     * Path中增加：%HADOOP_HOME%\bin
   5.  配置Hadoop文件
-    1. 编辑“D:\hadoop-2.5.2\etc\hadoop”下的core-site.xml文件，修改<configuration>如下：
+    * 编辑“D:\hadoop-2.5.2\etc\hadoop”下的core-site.xml文件，修改<configuration>如下：
     ```
     <configuration>
       <property>
@@ -39,7 +39,7 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
       </property>
     </configuration>
     ```
-    2. 编辑“D:\hadoop-2.5.2\etc\hadoop”下的mapred-site.xml（没有就将mapred-site.xml.template重命名为mapred-site.xml）：
+    * 编辑“D:\hadoop-2.5.2\etc\hadoop”下的mapred-site.xml（没有就将mapred-site.xml.template重命名为mapred-site.xml）：
     ```
     <configuration>
       <property>
@@ -52,7 +52,7 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
       </property>
     </configuration>
     ```
-    3. 编辑“D:\hadoop-2.5.2\etc\hadoop”下的hdfs-site.xml:
+    * 编辑“D:\hadoop-2.5.2\etc\hadoop”下的hdfs-site.xml:
     ```
     <configuration>
     <!-- 这个参数设置为1，因为是单机版hadoop -->
@@ -66,7 +66,7 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
       </property>
     </configuration>
     ```
-    4. 编辑“D:\hadoop-2.5.2\etc\hadoop”目录下的yarn-site.xml文件:
+    * 编辑“D:\hadoop-2.5.2\etc\hadoop”目录下的yarn-site.xml文件:
     ```
     <configuration>
       <property>
@@ -79,7 +79,7 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
       </property>
     </configuration>
     ```
-    5. 根据以上配置，在路径"D:\hadoop-2.5.2\workplace"下创建文件夹：tmp,name,data
+    * 根据以上配置，在路径"D:\hadoop-2.5.2\workplace"下创建文件夹：tmp,name,data。
   6. 为Hadoop配置JDK路径
 
     编辑“D:\hadoop-2.5.2\etc\hadoop”目录下的hadoop-env.cmd，将JAVA_HOME用 @rem注释掉，编辑为JAVA_HOME的路径：
