@@ -94,6 +94,19 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
     2. 运行cmd窗口，切换到hadoop的sbin目录，执行start-all.cmd，它将会启动以下4个进程窗口，则说明配置成功：
     ![](../img/hadoop4.png)
     namenode,datanode,resourcemanager,nodemanager四个进程
+  9. 简单操作
+
+  根据core-site.xml的配置，接下来就可以通过：hdfs://localhost:9000来对HDFS进行操作了。
+    1. 创建输入目录：
+    ```
+    hadoop fs -mkdir hdfs://localhost:9000/user/
+    hadoop fs -mkdir hdfs://localhost:9000/user/wcinput
+    ```
+    2. 上传数据到目录：
+    ```
+    hadoop fs -put D:\personal\debug.log hdfs://localhost:9000/user/wcinput
+    hadoop fs -put D:\personal\waz.txt hdfs://localhost:9000/user/wcinput
+    ```
 
 ## 补充
   1. 资源管理GUI:http://localhost:8088/；
