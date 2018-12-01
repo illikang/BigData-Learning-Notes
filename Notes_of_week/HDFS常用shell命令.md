@@ -49,6 +49,18 @@ drwxr-xr-x   - Leon supergroup          0 2018-12-01 23:05 /leon
 drwxr-xr-x   - Leon supergroup          0 2018-12-02 00:28 /logs
 ```
 6. 查看HDFS上文本文件：
+```
+hadoop fs -cat /README.txt    //查看HDFS上根目录下的README.txt,以下输出为读取的内容片段
+For the latest information about Hadoop, please visit our website at:
+
+   http://hadoop.apache.org/core/
+.....
+
+```
+7. 复制HDFS文件到本地：
+```
+hadoop fs -copyToLocal /README.txt c:\    //将HDFS根目录下的README.txt拷贝到本地C盘根目录
+```
 
 ## 命令列表
 ```
