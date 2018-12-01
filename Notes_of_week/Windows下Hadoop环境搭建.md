@@ -24,5 +24,64 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
     * 新建HADOOP_HOME=D:\hadoop-2.5.2
     * Path中增加：%HADOOP_HOME%\bin
   5.  配置Hadoop文件
+   * 编辑“D:\hadoop-2.5.2\etc\hadoop”下的core-site.xml文件，修改<configuration>如下：
+   ```
+   <configuration>
+      <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/D:/hadoop-2.5.2/workplace/tmp</value>
+      </property>
+      <property>
+        <name>dfs.name.dir</name>
+        <value>/D:/hadoop-2.5.2/workplace/name</value>
+      </property>
+      <property>
+        <name>fs.default.name</name>
+        <value>hdfs://localhost:9000</value>
+      </property>
+    </configuration>
+   ```
+   * 编辑“D:\hadoop-2.5.2\etc\hadoop”下的mapred-site.xml（没有就将mapred-site.xml.template重命名为mapred-site.xml）：
+   ```
+   <configuration>
+      <property>
+       <name>mapreduce.framework.name</name>
+       <value>yarn</value>
+      </property>
+      <property>
+       <name>mapred.job.tracker</name>
+       <value>hdfs://localhost:9001</value>
+      </property>
+    </configuration>
+   ```
+   * 编辑“D:\hadoop-2.5.2\etc\hadoop”下的hdfs-site.xml:
+   ```
+   <configuration>
+    <!-- 这个参数设置为1，因为是单机版hadoop -->
+      <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+      </property>
+      <property>
+        <name>dfs.data.dir</name>
+        <value>/D:/hadoop-2.5.2/workplace/data</value>
+      </property>
+    </configuration>
+   ```
+   * 编辑“D:\hadoop-2.5.2\etc\hadoop”目录下的yarn-site.xml文件:
+   ```
+   <configuration>
+      <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+      </property>
+    </configuration>
+   ```
+   * 根据以上配置，在路径"D:\hadoop-2.5.2\workplace"下创建文件夹：tmp,name,data。
+   
 
     
