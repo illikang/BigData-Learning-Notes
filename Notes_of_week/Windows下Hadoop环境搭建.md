@@ -1,5 +1,7 @@
 * [Window下Hadoop环境搭建](#Window下Hadoop环境搭建)
     * [概述](#概述)
+    * [演示环境](#演示环境)
+    * [配置步骤](#配置步骤)
 
 # Window下Hadoop环境搭建
 ## 概述
@@ -23,7 +25,7 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
     * Path中增加：%HADOOP_HOME%\bin
   5.  配置Hadoop文件
     * 编辑“D:\hadoop-2.5.2\etc\hadoop”下的core-site.xml文件，修改<configuration>如下：
-    ```
+   ```
     <configuration>
       <property>
         <name>hadoop.tmp.dir</name>
@@ -53,7 +55,7 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
     </configuration>
     ```
     * 编辑“D:\hadoop-2.5.2\etc\hadoop”下的hdfs-site.xml:
-    ```
+   ```
     <configuration>
     <!-- 这个参数设置为1，因为是单机版hadoop -->
       <property>
@@ -65,9 +67,9 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
         <value>/D:/hadoop-2.5.2/workplace/data</value>
       </property>
     </configuration>
-    ```
+   ```
     * 编辑“D:\hadoop-2.5.2\etc\hadoop”目录下的yarn-site.xml文件:
-    ```
+   ```
     <configuration>
       <property>
         <name>yarn.nodemanager.aux-services</name>
@@ -78,7 +80,7 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
         <value>org.apache.hadoop.mapred.ShuffleHandler</value>
       </property>
     </configuration>
-    ```
+   ```
     * 根据以上配置，在路径"D:\hadoop-2.5.2\workplace"下创建文件夹：tmp,name,data。
   6. 为Hadoop配置JDK路径
 
