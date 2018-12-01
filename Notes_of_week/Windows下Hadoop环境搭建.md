@@ -82,6 +82,38 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
     </configuration>
    ```
    * 根据以上配置，在路径"D:\hadoop-2.5.2\workplace"下创建文件夹：tmp,name,data。
+  6. 为Hadoop配置JDK路径
+   
+   编辑“D:\hadoop-2.5.2\etc\hadoop”目录下的hadoop-env.cmd，将JAVA_HOME用 @rem注释掉，编辑为JAVA_HOME的路径：
+   ```
+   @rem set JAVA_HOME=%JAVA_HOME%
+    set JAVA_HOME=C:\PROGRA~1\Java\jdk1.8.0_181
+    //注意：路径中不能有空格，“=”号前后不要有空格，如果Jave路径在program files路径下，改为PROGRA~1。
+   ```
+  7. 加入第三方工具：将下载好的hadooponwindows-master.zip解压，将将解压后的bin目录下的所有文件直接覆盖Hadoop的bin目录。
+  8. 运行环境
+      1. 运行cmd窗口，执行hdfs namenode -format。
+      2. 运行cmd窗口，切换到hadoop的sbin目录，执行start-all.cmd，它将会启动以下4个进程窗口，则说明配置成功：
+   ![](../img/hadoop4.png)
+   图中共有namenode,datanode,resourcemanager,nodemanager四个进程
+  9. 简单操作
+  
+  根据core-site.xml的配置，接下来就可以通过：hdfs://localhost:9000来对HDFS进行操作了。
+   1. 创建输入目录：
+   ```
+   hadoop fs -mkdir hdfs://localhost:9000/user/
+   hadoop fs -mkdir hdfs://localhost:9000/user/wcinput
+   ```
+   2. 上传数据到目录:
+   ```
+   hadoop fs -put D:\personal\debug.log hdfs://localhost:9000/user/wcinput
+   hadoop fs -put D:\personal\waz.txt hdfs://localhost:9000/user/wcinput
+   ```
+## 补充
+   * 资源管理GUI:http://localhost:8088/；
+   * 节点管理GUI:http://localhost:50070/
+   
+  
    
 
     
