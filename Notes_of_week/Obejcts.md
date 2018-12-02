@@ -2,13 +2,15 @@
 学习要直奔主题才最高效，初学数据库最好是在第一时间搭建起框架，这样才能方便后边的学习。
 如果一开始没有实际操作的机会而去研究理论的话，势必事倍功半。因此在框架搭建起来之前，都应该先尽快熟悉各个组件的安装与配置，搭建起一个可操作的平台。
 
-1. NOSQL数据库学习
-  - redis安装与配置
-  - redis数据类型
-  - redis命令
-  - Java使用Redis
-  
+1. HBase
+  - HBase部署
+  - HBase数据类型
+  -
 2. Hadoop入门
-  - 了解与认识Hadoop
-  - Hadoop安装与配置
-3. 
+  - 分布式Hadoop环境搭建
+  - HDFS数据读写过程
+  - HDFS权限
+  - MapReduce入门
+3. Redis应用
+  - Redis JAVA开发
+  - Redis 应用场景

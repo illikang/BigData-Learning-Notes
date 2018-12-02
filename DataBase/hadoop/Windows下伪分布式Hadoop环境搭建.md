@@ -94,7 +94,7 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
   8. 运行环境
       1. 运行cmd窗口，执行hdfs namenode -format。(如果格式化成功，在core-site.xml文件中配置的tmp文件夹中会写入dfs文件夹)
       2. 运行cmd窗口，切换到hadoop的sbin目录，执行start-all.cmd，它将会启动以下4个进程窗口，则说明配置成功：
-   ![](../img/hadoop4.png)
+   ![](/img/hadoop4.png)
    图中共有namenode,datanode,resourcemanager,nodemanager四个进程
   9. 简单操作
 
