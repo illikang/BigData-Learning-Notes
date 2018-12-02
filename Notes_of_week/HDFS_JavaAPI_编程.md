@@ -22,3 +22,79 @@ HDFS提供了多种与之交互的方式。我们可以通过Shell完成对文�
     <version>2.5.2</version>
   </dependency>
   ```
+  3. 使用Junit测试单元创建测试类，为测试准备好before和after方法：
+  ```
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.net.URI;
+
+/*
+Hadoop HDFS Java API 使用
+ */
+public class HDFSApp {
+    //根据core-site.xml配置的fs.default.name
+    public final String HDFS_PATH="hdfs://localhost:9000";
+
+    //FileSystem抽象类表示与Hadoop上一个文件系统交互的客户端接口
+    FileSystem fileSystem=null;
+    Configuration configuration=null;
+    @Before
+    public void setUp() throws Exception{
+        System.out.println("HDFSApp.setUp()");
+        configuration= new Configuration();
+        fileSystem=FileSystem.get(new URI(HDFS_PATH),configuration,"Leon");
+
+    }
+   
+   @After
+    public void tearDown(){
+        configuration=null;
+        fileSystem=null;
+        System.out.println("HDFSApp.tearDown()");
+    }
+}
+  ```
+  4. 编写测试方法
+   * 创建文件夹mkdir: 
+   ```
+    @Test
+    public void mkdir() throws IOException {
+        fileSystem.mkdirs(new Path("/test/"));
+    }
+   ```
+   * 创建文件
+   ```
+   @Test
+   public void create() throws IOException {
+        FSDataOutputStream output=fileSystem.create(new Path("/test/a.txt"));
+        output.write("Hello World!".getBytes());
+        output.flush();
+        output.close();
+    }
+   ```
+   * 查看文本文件
+   ```
+   @Test
+    public void cat() throws Exception{
+        FSDataInputStream in= fileSystem.open(new Path("/test/a.txt"));
+        IOUtils.copyBytes(in,System.out,1024);
+    }
+   ```
+   * 修改文件名
+   ```
+   @Test
+   public void rename() throws Exception{
+        Path oldPath= new Path("/test/a.txt");
+        Path newPath= new Path("/test/b.txt");
+        System.out.println(fileSystem.rename(oldPath,newPath));
+        //返回ture表示修改成功
+    }
+   ```
+    
+  
