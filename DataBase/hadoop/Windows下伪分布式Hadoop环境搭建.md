@@ -83,7 +83,7 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
    ```
    * 根据以上配置，在路径"D:\hadoop-2.5.2\workplace"下创建文件夹：tmp,name,data。
   6. 为Hadoop配置JDK路径
-   
+
    编辑“D:\hadoop-2.5.2\etc\hadoop”目录下的hadoop-env.cmd，将JAVA_HOME用 @rem注释掉，编辑为JAVA_HOME的路径：
    ```
    @rem set JAVA_HOME=%JAVA_HOME%
@@ -97,7 +97,7 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
    ![](../img/hadoop4.png)
    图中共有namenode,datanode,resourcemanager,nodemanager四个进程
   9. 简单操作
-  
+
   根据core-site.xml的配置，接下来就可以通过：hdfs://localhost:9000来对HDFS进行操作了。
    1. 创建输入目录：
    ```
@@ -112,8 +112,3 @@ Hadoop是原生的Linux平台工具，Apache官网并没有提供Windows版本�
 ## 补充
    * 资源管理GUI:http://localhost:8088/；
    * 节点管理GUI:http://localhost:50070/
-   
-  
-   
-
-    
