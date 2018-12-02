@@ -96,5 +96,15 @@ public class HDFSApp {
         //返回ture表示修改成功
     }
    ```
+   * 复制本地文件到HDFS
+   ```
+   @Test
+    public void copyFromLocal() throws Exception{
+        Path localPath= new Path("C:\\Repositories\\groups.conf");
+        Path hdfsPath= new Path("/test/");
+        fileSystem.copyFromLocalFile(localPath,hdfsPath);
+    }
+   ```
+   
     
   
