@@ -1,7 +1,7 @@
 # Redis
 
 ## 环境搭建
-### [1.Redis单节点环境搭建](Redis单节点环境搭建,md)
+### [1.Redis单节点环境搭建](Redis单节点环境搭建.md)
 ### [2.Redis集群搭建](Redis集群搭建.md)
 
 ## Shell操作
