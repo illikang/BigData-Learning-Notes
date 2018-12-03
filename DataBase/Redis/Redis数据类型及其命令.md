@@ -24,9 +24,12 @@
 ## 概述
 Redis是基于key-value的存储系统。
 它的值（value）支持五种数据类型：String(字符串),hash（哈希）,list（列表）,set（集合）和zset(sorted set：有序集合)。
+
 ## key
+
 ### key键
 Redis是键值存储结构，我们要存储的数据在值中，而值得索引则存储在键中。猜测：没有在资料中看到key的数据类型，猜测应该是字符串类型。
+
 ### key命令
 Redis键命令用于管理redis的键
 1. DEL key：在 key 存在时删除 key。
@@ -108,11 +111,14 @@ get p
 type p
 >string
 ```
+
 ## String
+
 ### String字符串
 1. String是redis最基本的类型，其他集合类型都是基于String构建的。
 2. String类型是二进制安全的，即redis的string可以包含任何数据，比如jpg图片或者序列化对象。
 3. String类型的值最大能存储512MB.
+
 ### String值命令
 1. SET key value ：设定指定key的值。
 ```
@@ -222,14 +228,86 @@ append a kang
 get a
 >"wangkang"
 ```
+
 ## hash
+
 ### hash哈希
+Redis hash是一个string类型的field和value的映射表，hash特别适合用于存储对象
 
 ### hash值命令
+1. HSET key field value ：将哈希表 key 中的字段 field 的值设为 value 。
+```
+hset h1 name leon
+>(integer) 1   //创建成功
+```
+2. HSETNX key field value :只有在字段 field 不存在时，设置哈希表字段的值。
+```
+hestnx h1 name Leon
+>(integer) 0   //key h1的field name已经存在，无法创建
+hsetnx h1 age 30
+>(integer) 1    //key h1的field age不存在，可以创建
+```
+3. HMSET key field1 value1 [field2 value2 ] ：同时将多个 field-value (域-值)对设置到哈希表 key 中。
+4. HGET key field ：获取存储在哈希表中指定字段的值。
+```
+hget h1 name
+>"leon"
+```
+5. HGETALL key :获取在哈希表中指定 key 的所有字段和值
+```
+hgetall h1
+>"name"
+>"leon"
+>"age"
+>"30"
+```
+6. HKEYS key :获取所有哈希表中的字段(field)
+```
+hkeys h1
+>"name"
+>"age"
+```
+7. HMGET key field1 [field2] :获取所有给定字段的值
+```
+hmget h1 name age
+1) "leon"
+2) "30"
+```
+8. HEXISTS key field :查看哈希表 key 中，指定的字段是否存在。
+```
+hexists h1 name
+(integer) 1
+```
+9. HDEL key field1 [field2]  :删除一个或多个哈希表字段
+```
+hdel h1 age
+(integer) 1
+```
+10. HINCRBY key field increment 为哈希表 key 中的指定字段的整数值加上增量 increment 。
+```
+hset h1 age 20
+hincrby h1 age 1
+(integer) 21
+```
+11. HINCRBYFLOAT key field increment :为哈希表 key 中的指定字段的浮点数值加上增量 increment 。
+12. HLEN key :获取哈希表中字段的数量
+```
+hlen h1
+(integer) 2
+```
+13. HVALS key :获取哈希表中所有值
+```
+hvals h1
+1) "leon"
+2) "21"
+```
+14. HSCAN key cursor [MATCH pattern] [COUNT count] :迭代哈希表中的键值对。
 
 ## list
+
 ### list列表
 Redis的list是每个子元素都是String类型的双向链表，可以通过push和pop操作从列表的头部或者尾部添加或者删除元素，这样List即可以作为栈，也可以作为队列。
+
 ### list值命令
 1. LPUSH key value1 [value2] :将一个或多个值插入到列表头部
 ```
@@ -316,14 +394,135 @@ ltrim team 0 2    //   team =[cc,dd,new]
 15. RPOPLPUSH source destination :移除列表的最后一个元素，并将该元素添加到另一个列表并返回
 16. RPUSHX key value :为已存在的列表添加值
 17. LPUSHX key value :将一个值插入到已存在的列表头部
+
 ## set
+
 ### set集合
+
+Set是String类型的无序集合。集合成员是唯一的，这意味着集合中不能出现重复的数据。Redis的set是通过哈希表实现的，所以添加、删除、查找的复杂度都是O(1)。
+
 ### set值命令
+1. SADD key member1 [member2] 向集合添加一个或多个成员
+```
+sadd s1 leon tom jack
+(integer) 3
+```
+2. SREM key member1 [member2] :移除集合中一个或多个成员
+```
+srem s1 leon
+(integer) 1
+```
+3. SCARD key :获取集合的成员数
+```
+scard s1
+(integer) 2
+```
+4. SMEMBERS key :返回集合中的所有成员
+```
+smembers s1
+1) "jack"
+2) "tom"
+```
+5. SISMEMBER key member :判断 member 元素是否是集合 key 的成员
+```
+sismember s1 jack
+(integer) 1
+```
+6. SDIFF key1 [key2] :返回给定所有集合的差集
+```
+sadd s1 leon jack leom tom
+sadd s2 leon lucy jason
+1) "jack"
+2) "leom"
+3) "tom"
+```
+7. SDIFFSTORE destination key1 [key2] :返回给定所有集合的差集并存储在 destination 中
+8. SINTER key1 [key2]
+```
+sinter s1 s2
+1) "leon"
+```
+9. SINTERSTORE destination key1 [key2] :返回给定所有集合的交集并存储在 destination 中
+10. SMOVE source destination member :将 member 元素从 source 集合移动到 destination 集合
+```
+smove s1 s2 jack
+(integer) 1
+```
+11. SPOP key :移除并返回集合中的一个随机元素
+```
+spop s1
+"leom"
+```
+12. SRANDMEMBER key [count] :返回集合中一个或多个随机数
+13. SUNION key1 [key2] :返回所有给定集合的并集
+```
+sunion s1 s2
+1) "leon"
+2) "jason"
+3) "jack"
+4) "tom"
+5) "lucy"
+```
+14. SUNIONSTORE destination key1 [key2] :所有给定集合的并集存储在 destination 集合中
+15. SSCAN key cursor [MATCH pattern] [COUNT count] :迭代集合中的元素
 
 ## zset
+
 ### zset有序集合
 1. Redis有序集合和集合一样也是string类型元素的集合，且不允许重复的成员。
 2. 不同的是，有序集合中的每个元素都会关联一个double类型的分数。Redis正是通过分数来为集合中的成员进行从小到大的排序。
 3. 有序集合的成员时唯一的，但与成员关联的double分数却可以重复。
-4. 集合是通过哈希表实现的，所以添加、删除、查找的复杂度都是O(1)。
+4. 在redis sorted sets里面当items内容大于64的时候同时使用了hash和skiplist两种设计实现。这也会为了排序和查找性能做的优化。所以如上可知：
+    * 添加和删除都需要修改skiplist，所以复杂度为O(log(n))。
+    * 但是如果仅仅是查找元素的话可以直接使用hash，其复杂度为O(1)
+    * 其他的range操作复杂度一般为O(log(n))
+    * 当然如果是小于64的时候，因为是采用了ziplist的设计，其时间复杂度为O(n)
+
 ### zset值命令
+1. ZADD key score1 member1 [score2 member2] :向有序集合添加一个或多个成员，或者更新已存在成员的分数
+```
+zadd z1 1 leon 2 tom 3 jack
+(integer) 3
+```
+2. ZCARD key :获取有序集合的成员数
+```
+zcard z1
+(integer) 3
+```
+3. ZCOUNT key min max :计算在有序集合中指定区间分数的成员数
+```
+zcount z1 1 3
+(integer) 3
+```
+4. ZINCRBY key increment member :有序集合中对指定成员的分数加上增量 increment
+```
+zincrby z1 1 leon   // 1.leon 2.tom 3. jacky
+"2"
+```
+5. ZINTERSTORE destination numkeys key [key ...] :计算给定的一个或多个有序集的交集并将结果集存储在新的有序集合 key 中
+6. ZLEXCOUNT key min max :在有序集合中计算指定字典区间内成员数量
+```
+zlexcount z1 - +
+(integer) 4
+```
+7. 	ZRANGE key start stop [WITHSCORES] :通过索引区间返回有序集合成指定区间内的成员
+```
+zrange z1 0 200
+1) "leon"
+2) "tom"
+3) "jack"
+4) "lucy"
+```
+8. ZRANGEBYLEX key min max [LIMIT offset count] :通过字典区间返回有序集合的成员
+9. ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT] :通过分数返回有序集合指定区间内的成员
+10. ZRANK key member :返回有序集合中指定成员的索引
+11. REM key member [member ...] :移除有序集合中的一个或多个成员
+12. ZREMRANGEBYLEX key min max :移除有序集合中给定的字典区间的所有成员
+13. ZREMRANGEBYRANK key start stop :移除有序集合中给定的排名区间的所有成员
+14. ZREMRANGEBYSCORE key min max :移除有序集合中给定的分数区间的所有成员
+15. ZREVRANGE key start stop [WITHSCORES] :返回有序集中指定区间内的成员，通过索引，分数从高到底
+16. ZREVRANGEBYSCORE key max min [WITHSCORES]  :返回有序集中指定分数区间内的成员，分数从高到低排序
+17. ZREVRANK key member :返回有序集合中指定成员的排名，有序集成员按分数值递减(从大到小)排序
+18. ZSCORE key member :返回有序集中，成员的分数值
+19. ZUNIONSTORE destination numkeys key [key ...] :计算给定的一个或多个有序集的并集，并存储在新的 key 中
+20. ZSCAN key cursor [MATCH pattern] [COUNT count] :迭代有序集合中的元素（包括元素成员和元素分值）
