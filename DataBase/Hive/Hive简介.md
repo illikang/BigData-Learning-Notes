@@ -5,7 +5,7 @@
     * [四、Hive的架构](#四、Hive的架构)
     * [五、Hive执行流程](#五、Hive执行流程)
 
-#Hive简介
+# Hive简介
 ## 一、什么是Hive
 Hive是由Facebook实现并开源，是基于Hadoop的一个数据仓库工具，可以将结构化的数据映射为一张数据库表，并提供HQL(Hive SQL)查询功能。底层数据是存储在HDFS上，本质是将SQL语句转换为MapReduce任务运行，使不熟悉MapReduce的用户很方便地利用HQL处理和计算HDFS上的结构化数据，适用于离线的批量数据计算。
 ## 二、为什么使用Hive
