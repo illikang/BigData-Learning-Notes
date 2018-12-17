@@ -97,7 +97,8 @@ BraveKnight knight= new BraveKnight(new SlayDragonQuest(new PrintStream("a.txt")
 至此，我们借助Spring帮助完全实现了依赖注入。要想获得Knight的对象，只需要从ApplcationContext中getBean()就可以了。至于他们之间的依赖关系等等，Spring容器都负责管理了。
 ```
 ApplicationContext applicationContext=new ClassPathXmlApplicationContext("knight.xml");
-BraveKnight knight= (BraveKnight) applicationContext.getBean(Knight.class);
+Knight knight= applicationContext.getBean(Knight.class);
+//通过执行代码完全不知道我们的骑士接受了哪种探险任务，也不知道是哪个骑士执行了任务。只有knight.xml文件知道哪个骑士执行哪种探险任务。
 knight.embarkOnQuest();
 ```
 尽管BraveKnight依赖于Quest，但是它并不知道传递给它的是什么类型的Quest，也不知道这个Quest来自哪里。与之类似，SlayDragonQuest依赖于PrintStream,但是在编码时它并不需要知道这个PrintStream是什么样子的。只有Spring通过它的配置，能够了解这些组成部分是如何装配起来的。这样的话，就可以在不改变所依赖的类的情况下，修改依赖关系。
