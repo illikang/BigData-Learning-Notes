@@ -27,36 +27,44 @@
 ## 二、项目开发
 ### 创建公共项目
   1. 新建dubbox-project项目，在项目中建立smbms-common模块
+  
     * 新建数据库dubbo_smbms
     * 新建表smbms_user：用户表
-    ```
-    id  数字（6）  主键
-    userCode   字符（25）  非空
-    userName   字符（25）  非空
-    password   字符（25）  非空
-    ```
+    
+      ```
+      id  数字（6）  主键
+      userCode   字符（25）  非空
+      userName   字符（25）  非空
+      password   字符（25）  非空
+      ```
+    
     * 新建表smbms_order：订单表
-    ```
-    id  数字（12）  主键
-    ownerUserId   数字（6）  非空
-    productName   字符（50）  非空
-    price   浮点（10，2）  非空
-    amount  数字（8）   非空
-    ```
+    
+      ```
+      id  数字（12）  主键
+      ownerUserId   数字（6）  非空
+      productName   字符（50）  非空
+      price   浮点（10，2）  非空
+      amount  数字（8）   非空
+      ```
+    
     * 插入数据
-    ```
-    {17,'zhangsan','张三','1234'}，{18,'zhangsan','张三','1234'}
-    ```
+    
+      ```
+      {17,'zhangsan','张三','1234'}，{18,'zhangsan','张三','1234'}
+      ```
+    
   2. 新建实体类与服务接口类
-    ```
-    cn.kgc1803.smbms-common.pojo.User
-    cn.kgc1803.smbms-common.pojo.Order
-    cn.kgc1803.smbms-common.service.UserService
-    cn.kgc1803.smbms-common.service.OrderService
-    ```
+        ```
+        cn.kgc1803.smbms-common.pojo.User
+        cn.kgc1803.smbms-common.pojo.Order
+        cn.kgc1803.smbms-common.service.UserService
+        cn.kgc1803.smbms-common.service.OrderService
+        ```
   3. 利用maven将公用项目打成jar包（package）并安装（install）到maven仓库中。
 
 ### 开发Provider(dubbo)
+
   1. 新建一个module smbms-user-provider
   2. 增加jar包依赖
     * zookeeper jar包 ：和注册中心通信的公共基础包
@@ -64,105 +72,105 @@
     * dubbo jar包：  发布服务于订阅服务包
     * smbms-common jar包：  公共的实体类与service接口
     * hession jar包： 提供通信协议（http,dubbo等协议）
-    ```
-        <dependency>
-            <groupId>cn.kgc.1803</groupId>
-            <artifactId>smbms-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+      ```
+          <dependency>
+              <groupId>cn.kgc.1803</groupId>
+              <artifactId>smbms-common</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
 
-        <dependency>
-            <groupId>com.101tec</groupId>
-            <artifactId>zkclient</artifactId>
-            <version>0.8</version>
-        </dependency>
+          <dependency>
+              <groupId>com.101tec</groupId>
+              <artifactId>zkclient</artifactId>
+              <version>0.8</version>
+          </dependency>
 
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>3.4.6</version>
-        </dependency>
+          <dependency>
+              <groupId>org.apache.zookeeper</groupId>
+              <artifactId>zookeeper</artifactId>
+              <version>3.4.6</version>
+          </dependency>
 
-        <dependency>
-            <groupId>repository.com.alibaba</groupId>
-            <artifactId>dubbo</artifactId>
-            <version>2.8.4</version>
-        </dependency>
-        <!--通信包-->
-        <dependency>
-            <groupId>com.caucho</groupId>
-            <artifactId>hessian</artifactId>
-            <version>4.0.7</version>
-        </dependency>
-    ```
+          <dependency>
+              <groupId>repository.com.alibaba</groupId>
+              <artifactId>dubbo</artifactId>
+              <version>2.8.4</version>
+          </dependency>
+          <!--通信包-->
+          <dependency>
+              <groupId>com.caucho</groupId>
+              <artifactId>hessian</artifactId>
+              <version>4.0.7</version>
+          </dependency>
+      ```
   3. 编写服务实现类
-    ```
-    #修改User类继承序列化接口
-    public class User implements Serializable
-    #编写UserS而viceImpl类
-    public class UserServiceImpl implements UserService {
-      public User loginUser(User u) {
-        if(u.getUserCode().equals("zhangsan") && u.getPassword().equals("1234")){
-            return u;
+      ```
+      #修改User类继承序列化接口
+      public class User implements Serializable
+      #编写UserS而viceImpl类
+      public class UserServiceImpl implements UserService {
+        public User loginUser(User u) {
+          if(u.getUserCode().equals("zhangsan") && u.getPassword().equals("1234")){
+              return u;
+          }
+          else{
+              return null;
+          }
         }
-        else{
-            return null;
-        }
-    }
-}
-    ```
+      }
+      ```
   4. 配置dubbo发布服务（spring）
     * 新建spring配置文件dubbo_user_provider.xml
     * 注入service到spring中
-    ```
-    <bean id="userService" class="cn.kgc1803.smbms_user_provider.service.UserServiceImpl"/>
-    ```
+      ```
+      <bean id="userService" class="cn.kgc1803.smbms_user_provider.service.UserServiceImpl"/>
+      ```
     * 在spring配置文件中增加命名空间
-    ```
-    <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://code.alibabatech.com/schema/dubbo
-       http://code.alibabatech.com/schema/dubbo/dubbo.xsd
-">
-    ```
+      ```
+      <?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+         xsi:schemaLocation="
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://code.alibabatech.com/schema/dubbo
+         http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+  ">
+      ```
     * 利用dubbo命名空间配置应用名称
-    ```
-    <dubbo:application name="user_provider_app" owner="kgc" organization="kgc1803"/>
-    ```
+      ```
+      <dubbo:application name="user_provider_app" owner="kgc" organization="kgc1803"/>
+      ```
     * 配置注册中心
-    ```
-    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
-    ```
+      ```
+      <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+      ```
     * 配置dubbo协议
-    ```
-    <!--配置协议(dubbo协议)-->
-    <dubbo:protocol name="dubbo" contextpath="dubbo" />
-    ```
+      ```
+      <!--配置协议(dubbo协议)-->
+      <dubbo:protocol name="dubbo" contextpath="dubbo" />
+      ```
     * 发布服务
-    ```
-    <!--发布服务-->
-    <dubbo:service protocol="dubbo" interface="cn.kgc1803.smbms_common.service.UserService" ref="userService"/>
-    ```
+      ```
+      <!--发布服务-->
+      <dubbo:service protocol="dubbo" interface="cn.kgc1803.smbms_common.service.UserService" ref="userService"/>
+      ```
   5. 编写测试类
-    ```
-    public class TestProvider {
-    public static void main(String[] args) {
-        //加载spring配置文件
-        ApplicationContext ctx=
-                new ClassPathXmlApplicationContext("dubbo_user_provider.xml");
-        try {
-            Thread.sleep(60*60*1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-}
-    ```
+      ```
+      public class TestProvider {
+      public static void main(String[] args) {
+          //加载spring配置文件
+          ApplicationContext ctx=
+                  new ClassPathXmlApplicationContext("dubbo_user_provider.xml");
+          try {
+              Thread.sleep(60*60*1000);
+          } catch (InterruptedException e) {
+              e.printStackTrace();
+          }
+      }
+     }
+      ```
   6. 启动测试
 
     访问：http://127.0.0.1:8080/dubbo-admin-2.8.4/，查看服务是否已经注册进去
