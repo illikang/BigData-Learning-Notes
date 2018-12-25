@@ -2,7 +2,7 @@
 
 ## 环境准备
 
-### 搭建注册中心（ZooKeeper）
+### 一、搭建注册中心（ZooKeeper）
   1. 获取并解压ZooKeeper，zookeeper-3.4.6.tar.gz
   2. 更改zooKeeper的配置文件
     * 在zookeeper主目录/conf下，改名zoo_sample.cfg为zoo.cfg，打开修改如下：
@@ -24,7 +24,7 @@
   2. 将dubbo-admin项目打包并发布到Tomcat。
   3. 在浏览器访问dubbo监控中心项目。
 
-## 项目开发
+## 二、项目开发
 ### 创建公共项目
   1. 新建dubbox-project项目，在项目中建立smbms-common模块
     * 新建数据库dubbo_smbms
@@ -232,3 +232,86 @@ public class OrderServiceImpl implements OrderService {
   5. 重新启动测试类，测试两个服务是否注册成功。
     * dubbo注册成功的服务，可以在监控中心（http://127.0.0.1:8080/dubbo-admin-2.8.4/）查询到。
     * REST注册成功的服务，可以通过REST端口的HTTP方式访问：http://127.0.0.1:20888/order/orderlist.htm
+
+### 开发Consumer
+  1. 新建Module smbms-user-consumer
+  2. 添加Jar包依赖
+    * spring-webmvc (spring + spring web+spring mvc)
+    * dubbo-admin
+    * zookeeper
+    * zkclient
+    * hession
+  3. 编写控制器（编写过程与SpringMVC开发一致）
+  ```
+  @Controller
+  @RequestMapping("/user")
+  public class UserController {
+    @Resource
+    private UserService userService;
+
+    @RequestMapping(value = "/dologin.htm", method = RequestMethod.POST)
+    public String doLogin(User user, HttpSession session){
+        User u=userService.loginUser(user);
+        if(u==null){  //登陆失败
+            return "login";
+        }else {
+            session.setAttribute("session_user",u);
+            return "index";
+        }
+    }
+  }
+  ```
+  4. 编写页面
+  5. 配置web.xml(只针对SpringMVC)
+  ```
+  <servlet>
+    <servlet-name>mvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <!--启动spring mvc配置文件-->
+    <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring-servlet.xml</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>mvc</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  ```
+  6. 如何把IDEA中一个非WEB项目转化为WEB项目
+
+    ![](img/web.jpg)
+
+    * 打开Project Settings,在项目模块中添加Web框架。
+    * 检查右侧的xml文件路径是否正确。如果不正确，点击"-"删除，重新添加并配置正确的路径。
+    * 在模块项目的pom.xml文件中加入war打包方式
+    ```
+    <packaging>war</packaging>
+    ```
+  7. 添加dubbo配置文件dubbo_user_consumer.xml，并编写文件内容，实现订阅。
+  ```
+    <!--配置dubbo发布服务-->
+    <!--设置提供者本次发布服务的应用名称-->
+    <dubbo:application name="user_consumer_app" owner="kgc" organization="kgc1803"/>
+    <!--注册中心-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    <!--订阅服务-->
+    <dubbo:reference
+            interface="cn.kgc1803.smbms_common.service.UserService"
+            id="userService"/>
+  ```
+  8. 改写web.xml文件，添加dubbo配置。
+  ```
+  <!--添加以下内容-->
+  <!--启动dubbo-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:dubbo_user_consumer.xml</param-value>
+    </context-param>
+
+    <!--多个spring容器之间访问-->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+  ```
