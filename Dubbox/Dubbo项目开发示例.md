@@ -324,6 +324,7 @@ public class OrderServiceImpl implements OrderService {
     </listener>
   ```
   9. 启动测试。
+  
     * 启动ZK服务器与ZK客户端
     * 启动监控中心
     * 启动Provider项目
