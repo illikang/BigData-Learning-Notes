@@ -323,3 +323,9 @@ public class OrderServiceImpl implements OrderService {
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
   ```
+  9. 启动测试。
+    * 启动ZK服务器与ZK客户端
+    * 启动监控中心
+    * 启动Provider项目
+    * 启动consumer项目
+    * 访问页面，测试
