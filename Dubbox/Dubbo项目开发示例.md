@@ -316,8 +316,109 @@ public class OrderServiceImpl implements OrderService {
     </listener>
   ```
   9. 启动测试。
+
     * 启动ZK服务器与ZK客户端
     * 启动监控中心
     * 启动Provider项目
     * 启动consumer项目
     * 访问页面，测试
+
+### REST方式访问问题的解决
+之前的配置中，我们通过Rest实现了service层输出JSON数据到HTTP协议。但是这种情况只有在静态访问的情况下才有效，由于安全问题，如果前端是通过Ajax访问，则无法获取到数据。这个时候，可以在control层中获取Service层中以REST方式提供的数据，然后通过@ResponseBody返回给Ajax。
+```
+@Controller
+@RequestMapping("/order")
+public class OrderController {
+    @RequestMapping("orderlist.htm")
+    @ResponseBody
+    public void getOrderListJson(HttpServletResponse response){
+        response.setCharacterEncoding("UTF-8");
+        try{
+            //请求输出流
+            OutputStream out=response.getOutputStream();
+            //获取远程的dubbo rest数据
+            //1. 请求地址
+            URL url=new URL("http://127.0.0.1:20888/order/orderlist/11");
+            URLConnection conn=url.openConnection();
+            //读入rest数据
+            InputStream in=conn.getInputStream() ;
+            byte[] buf= new byte[1024];
+            int len=in.read(buf);
+            //
+            while(len!=-1){
+                out.write(buf,0,len);
+                len=in.read(buf);
+            }
+            out.flush();
+        }catch (IOException e ){
+            System.out.println("异常");
+        }
+    }
+}
+```
+
+### 加入Mybatis完成SSM框架
+  1. Provider提供服务，需要查询数据库，因此在provider模块中加入Mybatis框架。在pom.xml文件中添加以来jar包。
+    * mybatis jar
+    * 整合包
+    * 数据库驱动包
+  2. 编写DAO（注解方式）
+  ```
+  @Mapper
+  @Repository
+  public interface UserMaper{
+    @Select("SELECT userCode, id,userName FROM smbms_user WHERE userCode=#{userCode} AND PASSWORD=#{password}")
+    @Results(id = "user" ,value = {
+            @Result(property ="id" ,column ="id" ,javaType =Integer.class ),
+            @Result(property = "userName",column ="userName" ,javaType =String.class),
+            @Result(property = "userCode",column ="userCode" ,javaType =String.class ),
+    })
+    User loginUser(User u);
+  ```
+  3. 配置spring（注入mybatis，dao，service）
+    * 新建一个spring配置文件，spring-service.xml
+    * 注入dataSource,sessionFactory,dao,mapper-xml
+    * 修改service的xml配置方式为注入方式
+    ```
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+        <!--  引入配置文件 -->
+        <context:property-placeholder location="classpath:database.properties"/>
+        <!--  注入dataSource -->
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" >
+                <property name="driverClassName" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username123}"/>
+                <property name="password" value="${password}"/>
+        </bean>
+
+        <!--  注入sessionFacotory -->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+                <property name="dataSource" ref="dataSource"/>
+        </bean>
+
+        <!--  注入dao mapper -->
+        <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+                <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+                <property name="basePackage" value="cn.kgc1803.smbms_user_provider.dao"/>
+        </bean>
+        <!--   注入service -->
+        <context:component-scan base-package="cn.kgc1803.smbms_user_provider.service"/>
+        </beans>
+    ```
+    * database.property文件
+    ```
+    driver=com.mysql.jdbc.Driver
+    url=jdbc:mysql://localhost:3306/dubbo_smbms?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username123=root
+    password=Wka4562354
+    ```
+  4. 重新启动项目测试
