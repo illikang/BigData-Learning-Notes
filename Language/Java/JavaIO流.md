@@ -36,3 +36,23 @@ InputStream、OutputStream是用来读入与写出字节数据，若实际上处
 1. InputStreamReader与OutputStreamWriter
 2. BufferedReader与BufferedWriter
 3. PrintWriter
+
+## 实例：通过字节流实现文件复制
+```
+File src=new File("C:\\Users\\Administrator\\Desktop\\apache-maven-3.6.0-bin.tar.gz");
+        File des=new File("C:\\Users\\Administrator\\Desktop\\apache-maven-3.6.0-bin1.tar.gz");
+        try {
+            InputStream is= new FileInputStream(src);
+            OutputStream os= new FileOutputStream(des);
+            byte[] data= new byte[20*1024];
+            int length;
+            while ((length=is.read(data))!=-1){
+                System.out.println(length);
+                os.write(data);
+            }
+```
+
+## 总结
+Java的IO流设计得非常符合人类的思维。我们可以对比水管来理解。
+1. 创建的流的过程就好比铺设管道的过程。把自己想象成水库（一个盛水的容器），创建输入流，相当于我要给自己拉一根水管，把水流引向我,这时需要指定水源，也就是数据的来源。创建输出流，相当于我要送水给别人，自然需要指定水管的目的。
+2. 有了流，就相当于水管铺设好了。等到需要用水的时候，打开水龙头就可以。输入流的read(data)就好比打开水龙头，让水流进来（date指定流入哪个容器）。输出流的write就好比开闸防水（data指定开那个容器）。
