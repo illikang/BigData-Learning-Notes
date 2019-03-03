@@ -45,6 +45,7 @@ ReadableByteChannel rbc = fis.getChannel();
 * ServerSocketChannel：允许用户监听传入的TCP连接，与Web服务器相同。对于每个传入连接，都会为连接创建一个SocketChannel。
 ### 2.3 通道实例
 下面来看看如何将数据从一个通道复制到另一个通道或从一个文件复制到另一个文件的示例：
+```
 public static void main(String[] args) throws IOException {
             //文件读入流
             FileInputStream fis= new FileInputStream("music.txt");
