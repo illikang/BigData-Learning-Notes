@@ -20,7 +20,14 @@ Node.js定义：allows to package an applicaion with all of its dependencies int
 
 Docker是C/S结构，守护进程（即Docker deamon）运行在宿主机器上，用户借助安装在客户机上的客户端程序（Client）通过命令行的形式与守护进程交互。守护进程接收到命令后执行并返回运行结果。
 
-## 四、镜像和容器以及他们的关系
+## 四、Hello-World是什么执行的？
+  * Docker client 连接守护进程Docker deamon。
+  * Docker deamon从Docker Hub上拉取Hello-World镜像。
+  * Docker deamon从此镜像创建一个新的容器。镜像中包含了执行并产生最终输出的文本。
+  * Docker deamon通过流把执行结果发送给Docker client。
+
+
+## 五、镜像和容器以及他们的关系
 ### 1.镜像
 官方定义：An image is an executable package that includes everything needed to run an application--the code, a runtime, libraries, environment variables, and configuration files.
 
