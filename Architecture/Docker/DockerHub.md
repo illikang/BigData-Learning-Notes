@@ -26,3 +26,8 @@ docker push username/repository:tag
 docker run -p 4000:80 username/repository:tag
 ```
 如果要执行的镜像不在本地，Docker就会自动从远程仓库拉取。
+
+## 区分几个概念
+1. registries:注册表，
+2. repository：仓库，用来存放标签过的镜像，用标签来区分不同的镜像。
+3. tag：用来区分同一仓库中的不同镜像，相当于镜像的名字。
