@@ -1,6 +1,47 @@
 # Docker安装与配置
-
-## 一、Docker安装（以CentOS7为例）
+## Ubuntu安装
+### 一、Docker CE安装（方式一apt-get）
+1. 旧版本的docker有docker,docker.io或docker-engine.如果已经安装了，先卸载
+```
+$ sudo apt-get remove docker docker-engine docker.io containerd runc
+```
+2. 更新系统apt包
+```
+$sudo apt-get update
+```
+3. 安装工具包使apt仓库而不是Https
+```
+$ sudo apt-get install apt-transprot-https ca-certificates curl gnupg-agent software-properties-common
+```
+4. 添加并验证Docker官方GPG密钥
+```
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+$ sudo apt-key fingerprint 0EBFCD88
+# 如果输出9DC8字符串，表明ok
+```
+5. 设置稳定仓库
+```
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+```
+6. 安装最新版Docker CE
+```
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
+### 二、Docker CE安装（dpkg+deb包安装）
+待补充
+### 三、Docker CE卸载
+1. 卸载Docker
+```
+$ sudo apt-get purge docker-ce
+```
+2. 镜像、容器、卷和配置文件等都不会自动删除，如果想删除所有docker相关内容：
+```
+$ sudo rm -rf /var/lib/docker
+```
+## 二、Docker安装（CentOS7）
 1. Docker要求CentOS系统的内核版本高于3.10，首先检查系统版本来验证是否支持Docker。
 ```
 $ uname -r
@@ -43,7 +84,7 @@ $ docker version
 $ sudo docker run hello-world
 ```
 
-## 二、删除Docker CE
+## 三、删除Docker CE
 ```
 $ sudo yum remove docker-ce
 $ sudo rm -rf /var/lib/docker
@@ -67,11 +108,12 @@ $ sudo rm -rf /var/lib/docker
 ```
 #如果还没有 docker group 就添加一个：
 $ sudo groupadd docker
-#将用户加入该 group 内。然后退出并重新登录就生效啦。
-$ sudo gpasswd -a ${USER} docker
-$ sudo usermod -a -G gourpA user
+#将用户加入该 group 内。然后退出并重新登录以确保用户组与用户修改已经生效。虚拟机可能需要重新启动
+$ sudo usermod -aG docker $USER
 #重启 docker 服务
 $ sudo service docker restart
 #切换当前会话到新 group 或者重启 X 会话
 $ newgrp - docker
+# 用不带sudo的docker测试是否成功
+$ docker run hello-world
 ```
